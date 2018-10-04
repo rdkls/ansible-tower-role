@@ -1,17 +1,17 @@
-tower
-=========
+# Ansible Tower
 
 This role installs Ansible Tower.
 
-Requirements
-------------
+Forked from https://github.com/kovarus/ansible-tower-role
+
+# Requirements
 
 A license file is needed prior to using and the license path is passed as a variable.
 
 For the test.yml file to be used, a license.json file needs to be placed in the tests directory.
 
-Role Variables
---------------
+# Role Variables
+
 `license_file_path`
 - default: blank
 - description: This is a mandatory variable that specifies the path to the license file to be uploaded to Tower after installation.
@@ -61,4 +61,3 @@ Author Information
 ------------------
 
 Taylor Owen (towen@kovarus.com)
-
