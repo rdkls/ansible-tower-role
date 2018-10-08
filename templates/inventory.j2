@@ -1,7 +1,5 @@
-[primary]
+[tower]
 localhost ansible_connection=local
-
-[secondary]
 
 [database]
 
@@ -9,9 +7,21 @@ localhost ansible_connection=local
 admin_password='{{ admin_password }}'
 redis_password='{{ redis_password }}'
 
-pg_host=''
-pg_port=''
-
-pg_database='awx'
-pg_username='awx'
+pg_host='{{ postgres_host }}'
+pg_port='{{ postgres_port }}'
+pg_database='{{ postgres_database }}'
+pg_username='{{ postgres_username }}'
 pg_password='{{ postgres_password }}'
+
+rabbitmq_port=5672
+rabbitmq_vhost=tower
+rabbitmq_username=tower
+rabbitmq_password='{{ rabbitmq_password }}'
+rabbitmq_cookie=cookiemonster
+
+# Needs to be true for fqdns and ip addresses
+rabbitmq_use_long_name=false
+
+# Isolated Tower nodes automatically generate an RSA key for authentication;
+# To disable this behavior, set this value to false
+# isolated_key_generation=true

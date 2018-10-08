@@ -28,9 +28,30 @@ Role Variables
 - default: "password"
 - description: This specifies the password for the Redis cache
 
+`postgres_username`
+- default: "awx"
+- description: Username for the PostgreSQL database
+
 `postgres_password`
 - default: "password"
 - description: This specifies the password for the PostgreSQL database
+
+
+`postgres_host`
+- default: ""
+- description: Host for the PostgreSQL database
+
+`postgres_port`
+- default: ""
+- description: Port for the PostgreSQL database
+
+`postgres_database`
+- default: "awx"
+- description: Name for the PostgreSQL database
+
+`rabbitmq_password`
+- default: "password"
+- description: This specifies the password for RabbitMQ
 
 `install_cli`
 - default: True
