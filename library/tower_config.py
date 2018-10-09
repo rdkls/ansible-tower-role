@@ -11,7 +11,8 @@ def tower_argument_spec():
         host=dict(required=True, type='str'),
         url_username=dict(aliases=['tower_user'], type='str'),
         url_password=dict(aliases=['tower_password'], type='str', no_log=True),
-        license=dict(type='path')
+        license_file_path=dict(type='path'),
+        license_data=dict(type='dict'),
     ))
 
     return argument_spec
@@ -54,7 +55,6 @@ def upload_license(module, ul, token):
                            method='POST')
     if not resp and info:
         raise Exception(info)
-    output = resp.read()
 
     return info['status']
 
@@ -76,11 +76,10 @@ def compare_license(ul, tl):
     return 0
 
 
-def get_license_file(path):
-
-    with open(path) as license_data:
+def get_license_file(license):
+    with open(license) as license_data:
         d = json.load(license_data)
-        return d
+    return d
 
 
 def get_license(module, token):
@@ -99,8 +98,13 @@ def get_license(module, token):
 
 
 def tower_license(module, token):
-    license_path = module.params['license']
-    user_license = get_license_file(license_path)
+    if module.params['license_file_path']:
+        license_path = module.params['license_file_path']
+        user_license = get_license_file(license_path)
+    elif module.params['license_data']:
+        user_license = module.params['license_data']
+    else:
+        raise Exception('Must supply either "license" or "license_data"')
 
     tower_license = get_license(module, token)
 
@@ -120,7 +124,6 @@ def tower_license(module, token):
 
 
 def main():
-
     argument_spec = tower_argument_spec()
     module = AnsibleModule(argument_spec=argument_spec)
 
@@ -128,7 +131,7 @@ def main():
 
     output = {}
 
-    if module.params['license']:
+    if module.params['license'] or module.params['license_data']:
         license_msg, license_status = tower_license(module, authtoken)
         output['tower_license'] = {}
         output['tower_license']['msg'] = license_msg
