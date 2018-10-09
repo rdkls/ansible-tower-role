@@ -76,8 +76,8 @@ def compare_license(ul, tl):
     return 0
 
 
-def get_license_file(license):
-    with open(license) as license_data:
+def get_license_file(license_file_path):
+    with open(license_file_path) as license_data:
         d = json.load(license_data)
     return d
 
@@ -99,8 +99,7 @@ def get_license(module, token):
 
 def tower_license(module, token):
     if module.params['license_file_path']:
-        license_path = module.params['license_file_path']
-        user_license = get_license_file(license_path)
+        user_license = get_license_file(module.params['license_file_path'])
     elif module.params['license_data']:
         user_license = module.params['license_data']
     else:
@@ -131,7 +130,7 @@ def main():
 
     output = {}
 
-    if module.params['license'] or module.params['license_data']:
+    if module.params['license_file_path'] or module.params['license_data']:
         license_msg, license_status = tower_license(module, authtoken)
         output['tower_license'] = {}
         output['tower_license']['msg'] = license_msg
