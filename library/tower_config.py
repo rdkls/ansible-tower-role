@@ -34,6 +34,8 @@ def get_authtoken(module):
 
     resp, info = fetch_url(module, url, method='POST', data=json_data,
                            headers=headers)
+    if not resp and info:
+        raise Exception(info)
     content = json.loads(resp.read())
 
     return content['token']
@@ -50,6 +52,8 @@ def upload_license(module, ul, token):
     ul_json = json.dumps(ul)
     resp, info = fetch_url(module, url, data=ul_json, headers=headers,
                            method='POST')
+    if not resp and info:
+        raise Exception(info)
     output = resp.read()
 
     return info['status']
@@ -87,6 +91,8 @@ def get_license(module, token):
     headers['Authorization'] = "Token {0}".format(token)
 
     resp, info = fetch_url(module, url, headers=headers)
+    if not resp and info:
+        raise Exception(info)
     content = json.loads(resp.read())
 
     return content['license_info']
