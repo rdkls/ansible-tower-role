@@ -56,10 +56,13 @@ def upload_license(module, ul, token):
 
 
 def compare_license(ul, tl):
-    compare_list = ['company_name', 'contact_email', 'contact_name',
-                    'hostname', 'instance_count', 'license_date',
-                    'license_key', 'license_type', 'subscription_name',
-                    'trial']
+    compare_list = ['company_name',
+                    'hostname',
+                    'instance_count',
+                    'license_date',
+                    'license_key',
+                    'license_type',
+                    'subscription_name']
 
     for param in compare_list:
         if ul[param] != tl[param]:
