@@ -5,6 +5,24 @@
   register: installed_tower_version_cmd
   failed_when: false
 
+  # Install & Configure Tower CLI
+- name: Install Pip
+  become: true
+  yum:
+    name: python-pip
+
+- name: Install tower-cli
+  become: true
+  pip:
+    name: ansible-tower-cli
+
+- name: Configure tower-cli
+  become: true
+  shell: tower-cli config --global host 127.0.0.1 && tower-cli config --global username admin && tower-cli config --global password {{ admin_password }}
+  args:
+    creates: /etc/tower/tower_cli.cfg
+
+  # Install & Configure Tower
 - name: Get Tower Install File
   unarchive:
     src: http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ tower_version }}.tar.gz
@@ -26,20 +44,6 @@
     chdir: /tmp/ansible-tower-setup-{{ tower_version }}/
   when: installed_tower_version_cmd.stdout != tower_version
 
-- name: Install Pip
+- name: Set tower Licence via tower-cli
   become: true
-  yum:
-    name: python-pip
-
-- name: Install tower-cli
-  become: true
-  pip:
-    name: ansible-tower-cli
-  when: install_cli == True
-
-- name: Configure tower-cli
-  become: true
-  shell: tower-cli config --global host 127.0.0.1 && tower-cli config --global username admin && tower-cli config --global password {{ admin_password }}
-  args:
-    creates: /etc/tower/tower_cli.cfg
-  when: install_cli == True
+  shell: "tower-cli setting modify LICENSE '{{ license_data | to_json }}'"
