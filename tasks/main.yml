@@ -40,6 +40,8 @@
   shell: ./setup.sh -i /tmp/inventory
   args:
     chdir: /tmp/ansible-tower-setup-{{ tower_version }}/
+  async: 3600
+  poll: 2
   when: installed_tower_version_cmd.stdout != tower_version
 
 - name: Set tower Licence via tower-cli
