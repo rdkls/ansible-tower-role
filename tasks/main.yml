@@ -19,8 +19,6 @@
 - name: Configure tower-cli
   become: true
   shell: tower-cli config --global host 127.0.0.1 && tower-cli config --global username admin && tower-cli config --global password {{ admin_password }}
-  args:
-    creates: /etc/tower/tower_cli.cfg
 
   # Install & Configure Tower
 - name: Get Tower Install File
