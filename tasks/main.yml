@@ -1,23 +1,30 @@
 ---
-# tasks file for tower
+- name: Get Installed Tower Version
+  shell: /bin/tower-cli version | grep 'Ansible Tower' | awk '{print $3}'
+  become: yes
+  register: installed_tower_version_cmd
+  failed_when: false
+
 - name: Get Tower Install File
   unarchive:
     src: http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ tower_version }}.tar.gz
     dest: /tmp
     remote_src: True
+  when: installed_tower_version_cmd.stdout != tower_version
 
-- name: Set Passwords for Setup
+- name: Create inventory file, with setup passwords
   template:
     src: inventory.j2
     dest: /tmp/inventory
     mode: 0600
+  when: installed_tower_version_cmd.stdout != tower_version
 
-- name: Run Tower Install Script
+- name: Run Tower Setup Script
   become: true
   shell: ./setup.sh -i /tmp/inventory
   args:
     chdir: /tmp/ansible-tower-setup-{{ tower_version }}/
-    creates: /etc/tower
+  when: installed_tower_version_cmd.stdout != tower_version
 
 - name: Install Pip
   become: true
